@@ -1,0 +1,37 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+  mongo:
+    container_name: myMongoDB
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: userTest
+      MONGO_INITDB_ROOT_PASSWORD: securePass1408
+    ports:
+      - 27018:27017
+    networks:
+      default:
+        aliases:
+          - myNetWork
+  script:
+    container_name: script
+    depends_on:
+      - mongo
+    networks:
+      default:
+        aliases:
+          - myNetWork
+    build:
+      context: ./challenge_mercado_libre_db
+  api:
+    container_name: api
+    ports:
+      - 5050:5002
+    networks:
+      default:
+        aliases:
+          - myNetWork
+    build:
+      context: ./mercado_libre_api
